@@ -16,7 +16,7 @@ module.exports = {
     libDir: '',
     inpx: '',
     inpxFilterFile: '',
-    externalConfig: '',
+    externalToolsConfig: '',
     external: '',
 
     allowConfigRewrite: false,

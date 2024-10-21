@@ -206,8 +206,9 @@ export default class BaseList {
                         await axios.head(href);
                         const d = this.$refs.download;
                         d.href = href;
+                        d.download = "";
                         d.click();
-                    } else if (ext.type === "window") {
+                    } else if (ext.type === "link") {
                         const hrefUrl = new URL(href);
                         let url = ext.link || this.config.bookReadLink;
                         url = url.replace('${DOWNLOAD_LINK}', href)

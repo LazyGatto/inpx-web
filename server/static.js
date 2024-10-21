@@ -48,8 +48,8 @@ module.exports = (app, config) => {
                     await utils.touchFile(bookFile);
                     await utils.touchFile(bookFileDesc);
 
-                    let desc = await fs.readFile(bookFileDesc, 'utf8');
-                    let downFileName = (JSON.parse(desc)).downFileName;
+                    let bookDesc = JSON.parse(await fs.readFile(bookFileDesc, 'utf8'));
+                    let downFileName = bookDesc.downFileName;
                     let gzipped = true;
 
                     if (!req.acceptsEncodings('gzip') || fileType) {
@@ -71,6 +71,7 @@ module.exports = (app, config) => {
                         } else {
                             let extType = fileType.match(/^ext-([0-9a-z]+)$/i);
                             if (extType && config.external[extType[1]]) {
+                                //external tools
                                 let ext = config.external[extType[1]];
                                 ext.ext = ext.ext || extType[1];
 
@@ -86,10 +87,10 @@ module.exports = (app, config) => {
                                     HASHFILE: path.basename(bookFile),
                                     RESULTFILE: `${bookFile}.${ext.ext}`,
                                     FILENAME: downFileName.replace(/\.fb2$/, `.${ext.ext}`),
-                                    EXTDIR: path.dirname(config.externalConfig),
+                                    EXTDIR: path.dirname(config.externalToolsConfig),
+                                    LIBFOLDER: bookDesc.libFolder,
+                                    LIBFILE: bookDesc.libFile,
                                 };
-
-//console.log(`conf:\n` + JSON.stringify([desc, bookFile, rawFile, extVar], null, 2));
 
                                 let re = new RegExp("\\$\\{(.*?)\\}","gi");
                                 let cmd_line = ext.cmd.replace(re, function(matched){
@@ -122,7 +123,7 @@ module.exports = (app, config) => {
                                     return res.end();
                                 }
 
-                                //запуск cmd конвертора
+                                //запуск cmd конвертера
                                 try {
                                     let cmd = execSync(cmd_line, {
                                         cwd: `${config.publicFilesDir}${config.bookPathStatic}`,
@@ -137,7 +138,7 @@ module.exports = (app, config) => {
                                     return res.end();
                                 }
 
-                                //если есть cmdExport и есть результат работы конвертора(RESULTFILE), то запускается cmdExport
+                                //если есть cmdExport и есть результат работы конвертера(RESULTFILE), то запускается cmdExport
                                 if (ext.cmdExport && await fs.pathExists(extVar.RESULTFILE)) {
                                     cmd_line = ext.cmdExport.replace(re, function(matched){
                                         return extVar[matched.replace(/[${}]/g, "")] || matched;
@@ -162,7 +163,12 @@ module.exports = (app, config) => {
                                 if (ext.type === "download") {
                                     if (!await fs.pathExists(extVar.RESULTFILE))
                                         throw new Error(`File not exists: '${extVar.RESULTFILE}'`);
+                                    //тут нужно посмотреть, что лучше inline или attachment. на inline может браузер со своими действиями влезть
+                                    //res.set('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(extVar.FILENAME)}`);
+                                    //res.set('Content-Type', 'application/octet-stream');
                                     res.set('Content-Disposition', `inline; filename*=UTF-8''${encodeURIComponent(extVar.FILENAME)}`);
+                                    res.set('Content-Length', fs.statSync(extVar.RESULTFILE).size);
+                                    res.set('Cache-Control', 'private');
                                     return res.sendFile(extVar.RESULTFILE);
                                 }
                                 return res.end();
