@@ -430,4 +430,20 @@ docker run -v /path/to/library:/library:ro --user=1000 -p 12380:12380 inpx-web
 - Использование индекса, находящегося не в директории с библиотекой - передайте в docker run: `-v /path/to/index/flibusta.inpx:/app/index.inpx:ro -e INDEX_FILE=/app/index.inpx`
 - Если используется персистентная конфигурация (см выше), но нужно перечитывать индекс при каждом запуске передайте в docker run: `-e RECREATE=1`
 
+#### Docker-Compose
+
+```yaml
+services:
+  inpx-web:
+    image: ghcr.io/janisv/inpx-web:main
+    container_name: inpx-web
+    restart: unless-stopped
+    ports:
+      - 12380:12380
+    environment:
+      - INDEX_FILE=/app/index.inpx
+    volumes:
+      - /path/to/library:/library:ro
+```
+
 Связаться с автором проекта: [bookpauk@gmail.com](mailto:bookpauk@gmail.com)
