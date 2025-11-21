@@ -435,7 +435,7 @@ docker run -v /path/to/library:/library:ro --user=1000 -p 12380:12380 inpx-web
 ```yaml
 services:
   inpx-web:
-    image: ghcr.io/janisv/inpx-web:main
+    image: ghcr.io/janisv/inpx-web:master
     container_name: inpx-web
     restart: unless-stopped
     ports:
@@ -444,6 +444,7 @@ services:
       - INDEX_FILE=/app/index.inpx
     volumes:
       - /path/to/library:/library:ro
+      - /path/to/appdata:/app/data
 ```
 
 Связаться с автором проекта: [bookpauk@gmail.com](mailto:bookpauk@gmail.com)
