@@ -1,7 +1,7 @@
-FROM node:20-alpine as build
+FROM node:20-alpine AS build
 
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
+ENV PATH=/app/node_modules/.bin:$PATH
 COPY .babelrc .eslintrc nodemon.json package-lock.json package.json README.md ./
 COPY build ./build/
 COPY client ./client/
