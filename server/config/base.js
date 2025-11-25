@@ -24,7 +24,7 @@ module.exports = {
     accessPassword: '',
     accessTimeout: 0,
     extendedSearch: true,
-    bookReadLink: '',
+    bookReadLink: '/reader/?${DOWNLOAD_LINK}',
     loggingEnabled: true,
     logServerStats: false,
     logQueries: false,
