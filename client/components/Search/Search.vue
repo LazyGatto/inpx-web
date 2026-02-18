@@ -47,13 +47,7 @@
                                     {{ collection }}
                                 </div>
 
-                                <DivBtn class="q-ml-sm text-grey-5 toolbar-btn" :size="28" :icon-size="24" icon="la la-question" round @click.stop.prevent="showSearchHelp">
-                                    <template #tooltip>
-                                        <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                            Памятка
-                                        </q-tooltip>
-                                    </template>
-                                </DivBtn>
+                                <DivBtn class="q-ml-sm text-grey-5 toolbar-btn" :size="28" :icon-size="24" icon="la la-question" round tooltip="Памятка" @click.stop.prevent="showSearchHelp" />
                             </div>
                         </div>
                         <div v-show="!isExtendedSearch" class="row q-mx-sm q-mb-xs items-center" style="max-width: 1024px">
@@ -98,17 +92,7 @@
                                 </q-tooltip>
                             </q-input>
                             <div class="q-mx-xs" />
-                            <DivBtn
-                                class="text-grey-8 toolbar-btn q-mt-xs" :size="30" :icon-size="24" round
-                                icon="la la-level-up-alt"
-                                @click.stop.prevent="cloneSearch"
-                            >
-                                <template #tooltip>
-                                    <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                        Клонировать поиск
-                                    </q-tooltip>
-                                </template>
-                            </DivBtn>
+                            <DivBtn class="text-grey-8 toolbar-btn q-mt-xs" :size="30" :icon-size="24" round icon="la la-level-up-alt" tooltip="Клонировать поиск" @click.stop.prevent="cloneSearch" />
                         </div>
                         <div v-show="!isExtendedSearch && extendedParams" class="row q-mx-sm q-mb-xs items-center" style="max-width: 1024px">
                             <q-input
@@ -210,105 +194,38 @@
                             <DivBtn
                                 class="text-grey-8 toolbar-btn q-mt-xs" :size="30" round
                                 :disabled="!extSearch.author"
+                                :tooltip="`В раздел &quot;Авторы&quot; (author=${extSearch.author})`"
                                 @me-click="extToList('author')"
-                            >
-                                <div style="font-size: 130%">
-                                    <b>А</b>
-                                </div>
-                                <template #tooltip>
-                                    <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                        В раздел "Авторы" с переносом значения author={{ extSearch.author }}
-                                    </q-tooltip>
-                                </template>
-                            </DivBtn>
+                            ><div style="font-size: 130%"><b>А</b></div></DivBtn>
 
                             <div class="q-mx-xs" />
                             <DivBtn
                                 class="text-grey-8 toolbar-btn q-mt-xs" :size="30" round
                                 :disabled="!extSearch.series"
+                                :tooltip="`В раздел &quot;Серии&quot; (series=${extSearch.series})`"
                                 @me-click="extToList('series')"
-                            >
-                                <div style="font-size: 130%">
-                                    <b>С</b>
-                                </div>
-                                <template #tooltip>
-                                    <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                        В раздел "Серии" с переносом значения series={{ extSearch.series }}
-                                    </q-tooltip>
-                                </template>
-                            </DivBtn>
+                            ><div style="font-size: 130%"><b>С</b></div></DivBtn>
 
                             <div class="q-mx-xs" />
                             <DivBtn
                                 class="text-grey-8 toolbar-btn q-mt-xs" :size="30" round
                                 :disabled="!extSearch.title"
+                                :tooltip="`В раздел &quot;Книги&quot; (title=${extSearch.title})`"
                                 @me-click="extToList('title')"
-                            >
-                                <div style="font-size: 130%">
-                                    <b>К</b>
-                                </div>
-                                <template #tooltip>
-                                    <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                        В раздел "Книги" с переносом значения title={{ extSearch.title }}
-                                    </q-tooltip>
-                                </template>
-                            </DivBtn>
+                            ><div style="font-size: 130%"><b>К</b></div></DivBtn>
 
                             <div class="q-mx-xs" />
-                            <DivBtn
-                                class="text-grey-8 toolbar-btn q-mt-xs" :size="30" :icon-size="24" round
-                                icon="la la-level-up-alt"
-                                @click.stop.prevent="cloneSearch"
-                            >
-                                <template #tooltip>
-                                    <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                        Клонировать поиск
-                                    </q-tooltip>
-                                </template>
-                            </DivBtn>
+                            <DivBtn class="text-grey-8 toolbar-btn q-mt-xs" :size="30" :icon-size="24" round icon="la la-level-up-alt" tooltip="Клонировать поиск" @click.stop.prevent="cloneSearch" />
                         </div>
                     </div><!-- 1-1 -->
                     <!-- 1-2 -->
                     <div class="column q-mx-sm items-center">
                         <div style="height: 3px" />
-                        <DivBtn class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" :icon="colorSchemeIcon" round @click.stop.prevent="cycleColorScheme">
-                            <template #tooltip>
-                                <q-tooltip :delay="500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                    {{ colorSchemeLabel }}
-                                </q-tooltip>
-                            </template>
-                        </DivBtn>
-                        <DivBtn v-if="readingHistory.length" class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-book-open" round @click.stop.prevent="readingHistoryVisible = true">
-                            <template #tooltip>
-                                <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                    Продолжить чтение
-                                </q-tooltip>
-                            </template>
-                        </DivBtn>
-
-                        <DivBtn class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-cog" round @click.stop.prevent="settingsDialogVisible = true">
-                            <template #tooltip>
-                                <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                    Настройки
-                                </q-tooltip>
-                            </template>
-                        </DivBtn>
-
-                        <DivBtn class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-info-circle" round @click.stop.prevent="showAboutDialog">
-                            <template #tooltip>
-                                <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                    О программе
-                                </q-tooltip>
-                            </template>
-                        </DivBtn>
-
-                        <DivBtn v-if="!config.freeAccess" class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-sign-out-alt" round @click.stop.prevent="logout">
-                            <template #tooltip>
-                                <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                    Выход
-                                </q-tooltip>
-                            </template>
-                        </DivBtn>
+                        <DivBtn class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" :icon="colorSchemeIcon" round :tooltip="colorSchemeLabel" :tooltip-delay="600" @click.stop.prevent="cycleColorScheme" />
+                        <DivBtn v-if="readingHistory.length" class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-book-open" round tooltip="Продолжить чтение" @click.stop.prevent="readingHistoryVisible = true" />
+                        <DivBtn class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-cog" round tooltip="Настройки" @click.stop.prevent="settingsDialogVisible = true" />
+                        <DivBtn class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-info-circle" round tooltip="О программе" @click.stop.prevent="showAboutDialog" />
+                        <DivBtn v-if="!config.freeAccess" class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-sign-out-alt" round tooltip="Выход" @click.stop.prevent="logout" />
                     </div><!-- 1-2 -->
                 </div><!-- 1 -->
                 <!-- 2 -->
@@ -318,14 +235,9 @@
                         class="text-grey-6" :size="16" :icon-size="14"
                         :icon="(extendedParams ? 'la la-angle-double-up' : 'la la-angle-double-down')"
                         no-shadow
+                        :tooltip="extendedParams ? 'Скрыть дополнительные параметры' : 'Показать дополнительные параметры'"
                         @click.stop.prevent="extendedParams = !extendedParams"
-                    >
-                        <template #tooltip>
-                            <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
-                                {{ `${(extendedParams ? 'Скрыть' : 'Показать')} дополнительные критерии поиска` }}
-                            </q-tooltip>
-                        </template>
-                    </DivBtn>
+                    />
                 </div><!-- 2 -->
                 <div class="row items-center q-ml-lg q-my-xs">
                     <div style="width: 400px;">

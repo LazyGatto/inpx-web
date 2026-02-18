@@ -4,6 +4,9 @@
             <i :class="icon" :style="`font-size: ${iconSize}px; margin-top: ${imt}px`" />
             <slot></slot>
         </div>
+        <q-tooltip v-if="tooltip" :delay="tooltipDelay" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
+            {{ tooltip }}
+        </q-tooltip>
         <slot name="tooltip"></slot>
     </div>
 </template>
@@ -33,6 +36,8 @@ class DivBtn {
         imt:  { type: Number, default: 0 },// icon margin top
         disabled: Boolean,
         noShadow: Boolean,
+        tooltip: { type: String, default: '' },
+        tooltipDelay: { type: Number, default: 600 },
     };
 
     pressed = false;
