@@ -673,7 +673,17 @@ class Search {
     }
 
     get newReleaseAvailable() {
-        return (this.config.latestVersion && this.config.version != this.config.latestVersion);
+        const latest = this.config.latestVersion;
+        const current = this.config.version;
+        if (!latest || !current) return false;
+        const a = latest.split('.').map(Number);
+        const b = current.split('.').map(Number);
+        const len = Math.max(a.length, b.length);
+        for (let i = 0; i < len; i++) {
+            const diff = (a[i] || 0) - (b[i] || 0);
+            if (diff !== 0) return diff > 0;
+        }
+        return false;
     }
 
     get recStruct() {
