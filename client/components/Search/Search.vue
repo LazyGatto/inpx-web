@@ -818,7 +818,7 @@ class Search {
         const cfg = this.config;
         let info = `<div style="min-width: 220px">`;
         info += `<b>${cfg.name}</b> v${cfg.webAppVersion}`;
-        if (cfg.latestVersion && cfg.version !== cfg.latestVersion) {
+        if (this.newReleaseAvailable) {
             info += `<br><span style="color: var(--link-color)">Доступна новая версия v${cfg.latestVersion}</span>`;
         }
         if (cfg.latestReleaseLink) {
