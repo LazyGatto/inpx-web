@@ -384,7 +384,10 @@
                             <div class="text-bold" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ item.title }}</div>
                             <div style="font-size: 88%; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ item.author }}</div>
                         </div>
-                        <div class="q-ml-sm" style="font-size: 80%; color: var(--text-secondary); flex-shrink: 0;">{{ item.ext }}</div>
+                        <div class="q-ml-sm column items-end" style="font-size: 80%; color: var(--text-secondary); flex-shrink: 0;">
+                            <div>{{ item.ext }}</div>
+                            <div>{{ formatOpenedAt(item.openedAt) }}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="row justify-between q-pa-md" style="border-top: 1px solid var(--separator-color)">
@@ -854,6 +857,13 @@ class Search {
     openReleasePage() {
         if (this.config.latestReleaseLink)
             window.open(this.config.latestReleaseLink, '_blank');
+    }
+
+    formatOpenedAt(ts) {
+        if (!ts) return '';
+        const d = new Date(ts);
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     }
 
     loadReadingHistory() {
