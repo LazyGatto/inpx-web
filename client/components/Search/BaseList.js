@@ -190,6 +190,7 @@ export default class BaseList {
                         url = bookReadLink.replace('${DOWNLOAD_URI}', urlWithoutHost);
                     }
 
+                    this.saveReadingHistory(book, url);
                     window.open(url, '_blank');
                 }
             } else if (action == 'bookInfo') {
@@ -228,6 +229,24 @@ export default class BaseList {
             this.downloadFlag = false;
             this.loadingMessage2 = '';
         }
+    }
+
+    saveReadingHistory(book, url) {
+        const key = 'inpx-reading-history';
+        let history = [];
+        try { history = JSON.parse(localStorage.getItem(key) || '[]'); } catch(e) { /* ignore */ }
+        // deduplicate by url
+        history = history.filter(item => item.url !== url);
+        history.unshift({
+            title: book.title || '',
+            author: book.author || '',
+            ext: book.ext || '',
+            url,
+            openedAt: Date.now(),
+        });
+        if (history.length > 30) history = history.slice(0, 30);
+        localStorage.setItem(key, JSON.stringify(history));
+        this.$emit('listEvent', {action: 'readingHistoryUpdated'});
     }
 
     bookEvent(event) {

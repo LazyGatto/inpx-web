@@ -278,6 +278,14 @@
                                 </q-tooltip>
                             </template>
                         </DivBtn>
+                        <DivBtn v-if="readingHistory.length" class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-book-open" round @click.stop.prevent="readingHistoryVisible = true">
+                            <template #tooltip>
+                                <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
+                                    Продолжить чтение
+                                </q-tooltip>
+                            </template>
+                        </DivBtn>
+
                         <DivBtn class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-cog" round @click.stop.prevent="settingsDialogVisible = true">
                             <template #tooltip>
                                 <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
@@ -353,7 +361,38 @@
         <SelectDateDialog v-model="selectDateDialogVisible" v-model:date="search.date" />
         <SelectExtDialog v-model="selectExtDialogVisible" v-model:ext="search.ext" :ext-list="extList" />        
         <BookInfoDialog v-model="bookInfoDialogVisible" :book-info="bookInfo" :genre-map="genreMap" />
-        <SelectExtSearchDialog v-model="selectExtSearchDialogVisible" v-model:ext-search="extSearch" />        
+        <SelectExtSearchDialog v-model="selectExtSearchDialogVisible" v-model:ext-search="extSearch" />
+
+        <q-dialog v-model="readingHistoryVisible">
+            <div class="std-dialog-body" style="min-width: 340px; max-width: 620px; width: 90vw; border-radius: 4px;">
+                <div class="row items-center q-pa-md" style="font-size: 110%; border-bottom: 1px solid var(--separator-color)">
+                    <q-icon class="q-mr-sm text-primary" name="la la-book-open" size="24px" />
+                    <span>Продолжить чтение</span>
+                    <q-space />
+                    <q-btn v-close-popup flat round dense>
+                        <q-icon name="la la-times" size="18px" />
+                    </q-btn>
+                </div>
+                <div style="max-height: 60vh; overflow-y: auto;">
+                    <div
+                        v-for="(item, idx) in readingHistory"
+                        :key="idx"
+                        class="row items-center q-px-md q-py-sm reading-history-item"
+                        @click="openReadingHistoryItem(item)"
+                    >
+                        <div class="col" style="min-width: 0">
+                            <div class="text-bold" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ item.title }}</div>
+                            <div style="font-size: 88%; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ item.author }}</div>
+                        </div>
+                        <div class="q-ml-sm" style="font-size: 80%; color: var(--text-secondary); flex-shrink: 0;">{{ item.ext }}</div>
+                    </div>
+                </div>
+                <div class="row justify-between q-pa-md" style="border-top: 1px solid var(--separator-color)">
+                    <q-btn flat dense no-caps style="color: var(--text-secondary)" @click="clearReadingHistory">Очистить историю</q-btn>
+                    <q-btn v-close-popup color="primary" dense no-caps class="q-px-md">Закрыть</q-btn>
+                </div>
+            </div>
+        </q-dialog>
     </div>
 </template>
 
@@ -520,6 +559,8 @@ class Search {
     selectDateDialogVisible = false;
     selectExtDialogVisible = false;
     bookInfoDialogVisible = false;
+    readingHistoryVisible = false;
+    readingHistory = [];
     selectExtSearchDialogVisible = false;
 
     pageCount = 1;    
@@ -593,6 +634,7 @@ class Search {
     }
 
     mounted() {
+        this.loadReadingHistory();
         (async() => {
             //для срабатывания watch.config
             await this.api.updateConfig();
@@ -812,6 +854,25 @@ class Search {
     openReleasePage() {
         if (this.config.latestReleaseLink)
             window.open(this.config.latestReleaseLink, '_blank');
+    }
+
+    loadReadingHistory() {
+        try {
+            this.readingHistory = JSON.parse(localStorage.getItem('inpx-reading-history') || '[]');
+        } catch(e) {
+            this.readingHistory = [];
+        }
+    }
+
+    openReadingHistoryItem(item) {
+        this.readingHistoryVisible = false;
+        window.open(item.url, '_blank');
+    }
+
+    clearReadingHistory() {
+        localStorage.removeItem('inpx-reading-history');
+        this.readingHistory = [];
+        this.readingHistoryVisible = false;
     }
 
     showAboutDialog() {
@@ -1116,6 +1177,9 @@ class Search {
                 this.bookInfo = event.data;
                 this.bookInfoDialogVisible = true;
                 break;
+            case 'readingHistoryUpdated':
+                this.loadReadingHistory();
+                break;
         }
     }
 
@@ -1354,5 +1418,19 @@ export default vueComponent(Search);
 .separator {
     border-bottom: 2px solid var(--separator-color);
     margin: 5px 0 5px 0;
+}
+
+.reading-history-item {
+    cursor: pointer;
+    border-bottom: 1px solid var(--separator-color);
+    transition: background-color 0.15s;
+}
+
+.reading-history-item:hover {
+    background-color: var(--row-odd-bg);
+}
+
+.reading-history-item:last-child {
+    border-bottom: none;
 }
 </style>
