@@ -3,7 +3,7 @@
         <slot></slot>
 
         <!--------------------------------------------------->
-        <div v-show="type == 'alert'" class="bg-white no-wrap">
+        <div v-show="type == 'alert'" class="std-dialog-body no-wrap">
             <div class="header row">
                 <div class="caption col row items-center q-ml-md">
                     <q-icon v-show="caption" class="q-mr-sm" :class="iconColor" :name="iconName" size="28px"></q-icon>
@@ -28,7 +28,7 @@
         </div>
 
         <!--------------------------------------------------->
-        <div v-show="type == 'confirm'" class="bg-white no-wrap">
+        <div v-show="type == 'confirm'" class="std-dialog-body no-wrap">
             <div class="header row">
                 <div class="caption col row items-center q-ml-md">
                     <q-icon v-show="caption" class="q-mr-sm" :class="iconColor" :name="iconName" size="28px"></q-icon>
@@ -56,7 +56,7 @@
         </div>
 
         <!--------------------------------------------------->
-        <div v-show="type == 'prompt'" class="bg-white no-wrap">
+        <div v-show="type == 'prompt'" class="std-dialog-body no-wrap">
             <div class="header row">
                 <div class="caption col row items-center q-ml-md">
                     <q-icon v-show="caption" class="q-mr-sm" :class="iconColor" :name="iconName" size="28px"></q-icon>
@@ -88,7 +88,7 @@
         </div>
 
         <!--------------------------------------------------->
-        <div v-show="type == 'password'" class="bg-white no-wrap">
+        <div v-show="type == 'password'" class="std-dialog-body no-wrap">
             <div class="header row">
                 <div class="caption col row items-center q-ml-md">
                     <q-icon v-show="caption" class="q-mr-sm" :class="iconColor" :name="iconName" size="28px"></q-icon>
@@ -121,7 +121,7 @@
         </div>
 
         <!--------------------------------------------------->
-        <div v-show="type == 'hotKey'" class="bg-white no-wrap">
+        <div v-show="type == 'hotKey'" class="std-dialog-body no-wrap">
             <div class="header row">
                 <div class="caption col row items-center q-ml-md">
                     <q-icon v-show="caption" class="q-mr-sm" :class="iconColor" :name="iconName" size="28px"></q-icon>
@@ -399,6 +399,15 @@ class StdDialog {
 export default vueComponent(StdDialog);
 //-----------------------------------------------------------------------------
 </script>
+
+<style>
+.std-dialog-body {
+    background-color: white;
+}
+.body--dark .std-dialog-body {
+    background-color: #1d1d1d;
+}
+</style>
 
 <style scoped>
 .header {

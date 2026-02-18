@@ -83,10 +83,12 @@ const directives = {Ripple, ClosePopup};
 //plugins
 //import AppFullscreen from 'quasar/src/plugins/AppFullscreen';
 import Notify from 'quasar/src/plugins/Notify';
+import Dark from 'quasar/src/plugins/Dark';
 
 const plugins = {
     //AppFullscreen,
     Notify,
+    Dark,
 };
 
 //icons

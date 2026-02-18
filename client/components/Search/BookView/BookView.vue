@@ -33,57 +33,58 @@
         </div>
 
         <div class="q-ml-sm column">
+            <!-- Автор (в режимах series/title/extended) -->
             <div v-if="(mode == 'series' || mode == 'title' || mode == 'extended') && bookAuthor" class="row">
                 <div class="clickable2 text-green-10" @click.stop.prevent="emit('authorClick')">
                     {{ bookAuthor }}
                 </div>
             </div>
 
-            <div class="row items-center">
+            <!-- Строка 1: номер + название + кнопки действий -->
+            <div class="row items-center wrap">
                 <div v-if="book.serno" class="q-mr-xs">
                     {{ book.serno }}.
                 </div>
-                <div class="clickable2" :class="titleColor" @click.stop.prevent="emit('titleClick')">
+                <div class="clickable2 q-mr-xs" :class="titleColor" @click.stop.prevent="emit('titleClick')">
                     {{ book.title }}
                 </div>
-                <div v-if="(mode == 'title' || mode == 'extended') && bookSeries" class="q-ml-xs clickable2" @click.stop.prevent="emit('seriesClick')">
-                    {{ bookSeries }}
+                <div class="row items-center no-wrap">
+                    <q-btn v-if="showInfo" flat round dense size="sm" icon="la la-info-circle" @click.stop.prevent="emit('bookInfo')">
+                        <q-tooltip :delay="500" anchor="top middle" content-style="font-size: 80%">Информация о книге</q-tooltip>
+                    </q-btn>
+                    <q-btn flat round dense size="sm" icon="la la-download" @click.stop.prevent="emit('download')">
+                        <q-tooltip :delay="500" anchor="top middle" content-style="font-size: 80%">Скачать</q-tooltip>
+                    </q-btn>
+                    <template v-for="(item, key) in config.external" :key="key">
+                        <q-btn v-if="item.active" flat round dense size="sm" @click.stop.prevent="emit('ext-' + key)">
+                            <q-tooltip :delay="500" anchor="top middle" content-style="font-size: 80%">{{ item.hint || item.title || key }}</q-tooltip>
+                            <span style="font-size: 11px">{{ item.title || key }}</span>
+                        </q-btn>
+                    </template>
+                    <q-btn flat round dense size="sm" icon="la la-copy" @click.stop.prevent="emit('copyLink')">
+                        <q-tooltip :delay="500" anchor="top middle" content-style="font-size: 80%">Копировать ссылку</q-tooltip>
+                    </q-btn>
+                    <q-btn v-if="showReadLink" flat round dense size="sm" icon="la la-book-open" @click.stop.prevent="emit('readBook')">
+                        <q-tooltip :delay="500" anchor="top middle" content-style="font-size: 80%">Читать онлайн</q-tooltip>
+                    </q-btn>
                 </div>
+            </div>
 
-
-                <div class="q-ml-sm">
-                    {{ bookSize }}, {{ book.ext }}
-                </div>
-
-                <div v-if="showInfo" class="q-ml-sm clickable" @click.stop.prevent="emit('bookInfo')">
-                    (инфо)
-                </div>
-
-                <div class="q-ml-sm clickable" @click.stop.prevent="emit('download')">
-                    (скачать)
-                </div>
-
-                <div v-for="(item, key) in this.config.external">
-                    <div v-if="item.active" class="q-ml-sm clickable" :title="item.hint" @click.stop.prevent="emit('ext-' + key)">
-                        {{ item.title || key }}
-                    </div>
-                </div>
-
-                <div class="q-ml-sm clickable" @click.stop.prevent="emit('copyLink')">
-                    <q-icon name="la la-copy" size="20px" />
-                </div>
-
-                <div v-if="showReadLink" class="q-ml-sm clickable" @click.stop.prevent="emit('readBook')">
-                    (читать)
-                </div>
-
-                <div v-if="showGenres && book.genre" class="q-ml-sm">
-                    {{ bookGenre }}
-                </div>
-
-                <div v-if="showDates && book.date" class="q-ml-sm">
-                    {{ bookDate }}
-                </div>
+            <!-- Строка 2: мета-данные -->
+            <div class="row items-center no-wrap book-meta">
+                <template v-if="(mode == 'title' || mode == 'extended') && bookSeries">
+                    <div class="clickable2 q-mr-xs" @click.stop.prevent="emit('seriesClick')">{{ bookSeries }}</div>
+                    <span class="meta-sep">·</span>
+                </template>
+                <template v-if="showGenres && book.genre">
+                    <div class="q-mr-xs">{{ bookGenre }}</div>
+                    <span class="meta-sep">·</span>
+                </template>
+                <div class="q-mr-xs">{{ bookSize }}, {{ book.ext }}</div>
+                <template v-if="showDates && book.date">
+                    <span class="meta-sep">·</span>
+                    <div>{{ bookDate }}</div>
+                </template>
             </div>
 
             <div v-show="showJson && mode == 'extended'">
@@ -159,7 +160,7 @@ class BookView {
 
     get bookSeries() {
         if (this.book.series) {
-            return `(Серия: ${this.book.series})`;
+            return `Серия: ${this.book.series}`;
         }
 
         return '';
@@ -193,7 +194,7 @@ class BookView {
                 result.push(name);
         }
 
-        return `(${result.join(' / ')})`;
+        return result.join(' / ');
     }
 
     get bookDate() {
@@ -213,13 +214,29 @@ export default vueComponent(BookView);
 </script>
 
 <style scoped>
-.clickable {
-    color: blue;
-    cursor: pointer;
-}
-
 .clickable2 {
     cursor: pointer;
 }
 
+.text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.flex-shrink-0 {
+    flex-shrink: 0;
+}
+
+.book-meta {
+    font-size: 88%;
+    opacity: 0.85;
+    flex-wrap: wrap;
+}
+
+.meta-sep {
+    margin: 0 4px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
 </style>

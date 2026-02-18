@@ -13,7 +13,7 @@
                     Результатов на странице
                 </div>
                 <q-select
-                    v-model="limit" :options="limitOptions" class="bg-white"
+                    v-model="limit" :options="limitOptions"
                     dropdown-icon="la la-angle-down la-sm"
                     outlined dense emit-value map-options
                 />

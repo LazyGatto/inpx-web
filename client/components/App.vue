@@ -32,6 +32,9 @@ const componentOptions = {
         Search,
     },
     watch: {
+        'settings.colorScheme'(newValue) {
+            this.applyColorScheme(newValue);
+        },
     },
 
 };
@@ -39,8 +42,13 @@ class App {
     _options = componentOptions;
     accessGranted = false;
 
+    _mediaQuery = null;
+    _mediaQueryHandler = null;
+
     created() {
         this.commit = this.$store.commit;
+
+        this.applyColorScheme(this.settings.colorScheme || 'system');
 
         //root route
         let cachedRoute = '';
@@ -94,6 +102,32 @@ class App {
         this.setAppTitle();
     }
 
+    applyColorScheme(scheme) {
+        if (this._mediaQuery) {
+            this._mediaQuery.removeEventListener('change', this._mediaQueryHandler);
+            this._mediaQuery = null;
+            this._mediaQueryHandler = null;
+        }
+
+        if (scheme === 'light') {
+            this.$q.dark.set(false);
+        } else if (scheme === 'dark') {
+            this.$q.dark.set(true);
+        } else {
+            // 'system'
+            this.$q.dark.set('auto');
+            if (typeof window !== 'undefined') {
+                this._mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                this._mediaQueryHandler = (e) => { this.$q.dark.set(e.matches); };
+                this._mediaQuery.addEventListener('change', this._mediaQueryHandler);
+            }
+        }
+    }
+
+    get settings() {
+        return this.$store.state.settings;
+    }
+
     get config() {
         return this.$store.state.config;
     }
@@ -117,7 +151,27 @@ export default vueComponent(App);
 </style>
 
 <style>
-body, html, #app {    
+:root {
+    --toolbar-bg: #e0f7fa;
+    --toolbar-btn-bg: #fff9c4;
+    --link-color: #1565c0;
+    --text-secondary: #555555;
+    --border-color: #bbbbbb;
+    --separator-color: #dddddd;
+    --row-odd-bg: #e8e8e8;
+}
+
+.body--dark {
+    --toolbar-bg: #1a2332;
+    --toolbar-btn-bg: #2d3748;
+    --link-color: #64b5f6;
+    --text-secondary: #aaaaaa;
+    --border-color: #444444;
+    --separator-color: #333333;
+    --row-odd-bg: #2a2a2a;
+}
+
+body, html, #app {
     margin: 0;
     padding: 0;
     width: 100%;

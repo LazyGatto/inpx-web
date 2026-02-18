@@ -1,6 +1,6 @@
 <template>
     <q-dialog v-model="active" no-route-dismiss @show="onShow" @hide="onHide">
-        <div class="column bg-white no-wrap">
+        <div class="column dialog-body no-wrap">
             <div class="header row">
                 <div class="caption col row items-center q-ml-md">
                     <slot name="header"></slot>
@@ -76,5 +76,15 @@ export default vueComponent(Dialog);
 
 .close-icon {
     width: 50px;
+}
+
+</style>
+
+<style>
+.dialog-body {
+    background-color: white;
+}
+.body--dark .dialog-body {
+    background-color: #1d1d1d;
 }
 </style>

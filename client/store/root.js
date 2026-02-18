@@ -22,7 +22,8 @@ const state = {
         langDefault: '',
         showJson: false,
         showNewReleaseAvailable: true,
-    },    
+        colorScheme: 'system',  // 'light' | 'dark' | 'system'
+    },
 };
 
 // getters

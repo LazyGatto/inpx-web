@@ -175,13 +175,13 @@ export default vueComponent(SelectExtDialog);
 
 <style scoped>
 .checkbox-tick-all {
-    border-bottom: 1px solid #bbbbbb;
+    border-bottom: 1px solid var(--border-color);
     margin-bottom: 7px;
     padding: 5px 5px 2px 0px;
 }
 
 .clickable {
-    color: blue;
+    color: var(--link-color);
     cursor: pointer;
 }
 </style>

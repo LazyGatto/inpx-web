@@ -3,7 +3,7 @@
         <div class="q-mr-xs">
             Страница
         </div>
-        <div class="trans" :class="{'bg-green-4': highlight, 'bg-white': !highlight}">
+        <div class="trans" :class="{'bg-green-4': highlight, 'page-default': !highlight}">
             <NumInput 
                 v-model="page" :min="1" :max="pageCount" mask="#######"
                 style="width: 220px" minus-icon="la la-chevron-circle-left" plus-icon="la la-chevron-circle-right" :disable="disable" mm-buttons
@@ -71,5 +71,15 @@ export default vueComponent(PageScroller);
 .trans {
     border-radius: 5px;
     transition: background-color 0.3s linear;
+}
+
+</style>
+
+<style>
+.page-default {
+    background-color: white;
+}
+.body--dark .page-default {
+    background-color: #2d2d2d;
 }
 </style>

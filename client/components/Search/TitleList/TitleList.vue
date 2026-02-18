@@ -150,6 +150,6 @@ export default vueComponent(TitleList);
 }
 
 .odd-item {
-    background-color: #e8e8e8;
+    background-color: var(--row-odd-bg);
 }
 </style>

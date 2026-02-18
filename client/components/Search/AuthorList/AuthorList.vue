@@ -23,7 +23,7 @@
                     {{ item.name }}                            
                 </div>
 
-                <div class="q-ml-sm text-bold" style="color: #555">
+                <div class="q-ml-sm text-bold" :style="{color: 'var(--text-secondary)'}">
                     {{ getBookCount(item) }}
                 </div>
             </div>
@@ -55,7 +55,7 @@
                                 Серия: {{ book.series }}
                             </div>
 
-                            <div class="q-ml-sm text-bold" style="color: #555">
+                            <div class="q-ml-sm text-bold" :style="{color: 'var(--text-secondary)'}">
                                 {{ getSeriesBookCount(item, book) }}
                             </div>
                         </div>
@@ -493,7 +493,7 @@ export default vueComponent(AuthorList);
 }
 
 .odd-item {
-    background-color: #e8e8e8;
+    background-color: var(--row-odd-bg);
 }
 
 .book-row {

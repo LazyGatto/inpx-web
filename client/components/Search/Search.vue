@@ -1,8 +1,7 @@
 <template>
     <div class="root column fit" style="position: relative">
-        <div ref="scroller" class="col fit column no-wrap" style="overflow: auto; position: relative" @scroll="onScroll">
-            <!-- Tool Panel begin -->
-            <div ref="toolPanel" class="tool-panel column bg-cyan-2" style="position: sticky; top: 0; z-index: 10;">
+        <!-- Tool Panel begin -->
+        <div ref="toolPanel" class="tool-panel column">
                 <!-- Обновление -->
                 <div v-show="showNewReleaseAvailable && newReleaseAvailable" class="row q-py-sm bg-green-4 items-center">
                     <div class="q-ml-sm" style="font-size: 120%">
@@ -48,7 +47,7 @@
                                     {{ collection }}
                                 </div>
 
-                                <DivBtn class="q-ml-sm text-grey-5 bg-yellow-1" :size="28" :icon-size="24" icon="la la-question" round @click.stop.prevent="showSearchHelp">
+                                <DivBtn class="q-ml-sm text-grey-5 toolbar-btn" :size="28" :icon-size="24" icon="la la-question" round @click.stop.prevent="showSearchHelp">
                                     <template #tooltip>
                                         <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
                                             Памятка
@@ -100,7 +99,7 @@
                             </q-input>
                             <div class="q-mx-xs" />
                             <DivBtn
-                                class="text-grey-8 bg-yellow-1 q-mt-xs" :size="30" :icon-size="24" round
+                                class="text-grey-8 toolbar-btn q-mt-xs" :size="30" :icon-size="24" round
                                 icon="la la-level-up-alt"
                                 @click.stop.prevent="cloneSearch"
                             >
@@ -209,7 +208,7 @@
 
                             <div class="q-mx-xs" />
                             <DivBtn
-                                class="text-grey-8 bg-yellow-1 q-mt-xs" :size="30" round
+                                class="text-grey-8 toolbar-btn q-mt-xs" :size="30" round
                                 :disabled="!extSearch.author"
                                 @me-click="extToList('author')"
                             >
@@ -225,7 +224,7 @@
 
                             <div class="q-mx-xs" />
                             <DivBtn
-                                class="text-grey-8 bg-yellow-1 q-mt-xs" :size="30" round
+                                class="text-grey-8 toolbar-btn q-mt-xs" :size="30" round
                                 :disabled="!extSearch.series"
                                 @me-click="extToList('series')"
                             >
@@ -241,7 +240,7 @@
 
                             <div class="q-mx-xs" />
                             <DivBtn
-                                class="text-grey-8 bg-yellow-1 q-mt-xs" :size="30" round
+                                class="text-grey-8 toolbar-btn q-mt-xs" :size="30" round
                                 :disabled="!extSearch.title"
                                 @me-click="extToList('title')"
                             >
@@ -257,7 +256,7 @@
 
                             <div class="q-mx-xs" />
                             <DivBtn
-                                class="text-grey-8 bg-yellow-1 q-mt-xs" :size="30" :icon-size="24" round
+                                class="text-grey-8 toolbar-btn q-mt-xs" :size="30" :icon-size="24" round
                                 icon="la la-level-up-alt"
                                 @click.stop.prevent="cloneSearch"
                             >
@@ -270,12 +269,27 @@
                         </div>
                     </div><!-- 1-1 -->
                     <!-- 1-2 -->
-                    <div class="column q-mx-sm">
+                    <div class="column q-mx-sm items-center">
                         <div style="height: 3px" />
+                        <DivBtn class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" :icon="colorSchemeIcon" round @click.stop.prevent="cycleColorScheme">
+                            <template #tooltip>
+                                <q-tooltip :delay="500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
+                                    {{ colorSchemeLabel }}
+                                </q-tooltip>
+                            </template>
+                        </DivBtn>
                         <DivBtn class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-cog" round @click.stop.prevent="settingsDialogVisible = true">
                             <template #tooltip>
                                 <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
                                     Настройки
+                                </q-tooltip>
+                            </template>
+                        </DivBtn>
+
+                        <DivBtn class="q-mt-sm text-white bg-secondary" :size="28" :icon-size="24" :imt="1" icon="la la-info-circle" round @click.stop.prevent="showAboutDialog">
+                            <template #tooltip>
+                                <q-tooltip :delay="1500" anchor="bottom middle" content-style="font-size: 80%" max-width="400px">
+                                    О программе
                                 </q-tooltip>
                             </template>
                         </DivBtn>
@@ -305,23 +319,23 @@
                         </template>
                     </DivBtn>
                 </div><!-- 2 -->
-            </div>
-            <!-- Tool Panel end -->
+                <div class="row items-center q-ml-lg q-my-xs">
+                    <div style="width: 400px;">
+                        <PageScroller v-show="pageCount > 1" ref="pageScroller1" v-model="search.page" :page-count="pageCount" />
+                    </div>
 
-            <div class="row items-center q-ml-lg q-mt-sm">
-                <div style="width: 400px;">
-                    <PageScroller v-show="pageCount > 1" ref="pageScroller1" v-model="search.page" :page-count="pageCount" />
+                    <div v-show="list.totalFound > 0" class="text-bold" style="font-size: 120%; padding-bottom: 2px">
+                        {{ foundCountMessage }}
+                    </div>
+
+                    <div v-show="list.totalFound > 0 && isExtendedSearch" class="q-ml-md">
+                        <q-checkbox v-model="showJson" size="36px" label="Показывать JSON" />
+                    </div>
                 </div>
+        </div>
+        <!-- Tool Panel end -->
 
-                <div v-show="list.totalFound > 0" class="text-bold" style="font-size: 120%; padding-bottom: 2px">
-                    {{ foundCountMessage }}
-                </div>
-
-                <div v-show="list.totalFound > 0 && isExtendedSearch" class="q-ml-md">
-                    <q-checkbox v-model="showJson" size="36px" label="Показывать JSON" />
-                </div>
-            </div>
-
+        <div ref="scroller" class="col" style="overflow-y: auto;">
             <!-- Формирование списка ------------------------------------------------------------------------>
             <div v-if="selectedListComponent">
                 <div class="separator" />
@@ -330,15 +344,6 @@
             </div>
             <!-- Формирование списка конец ------------------------------------------------------------------>
 
-            <div class="row q-ml-lg q-mb-sm">
-                <PageScroller v-show="pageCount > 1" v-model="search.page" :page-count="pageCount" />
-            </div>
-
-            <div class="row justify-center">
-                <div class="q-mb-lg q-px-sm q-py-xs bg-cyan-2 clickable2" style="border: 1px solid #aaaaaa; border-radius: 6px; white-space: nowrap;" @click.stop.prevent="openReleasePage">
-                    {{ projectName }}
-                </div>
-            </div>
         </div>
 
         <SettingsDialog v-model="settingsDialogVisible" />
@@ -743,11 +748,37 @@ class Search {
         return result.join(', ');
     }
 
+    get colorScheme() {
+        return this.$store.state.settings.colorScheme || 'system';
+    }
+
+    set colorScheme(value) {
+        this.commit('setSettings', {colorScheme: value});
+    }
+
+    get colorSchemeIcon() {
+        if (this.colorScheme === 'light') return 'la la-sun';
+        if (this.colorScheme === 'dark') return 'la la-moon';
+        return 'la la-adjust';
+    }
+
+    get colorSchemeLabel() {
+        if (this.colorScheme === 'light') return 'Тема: Светлая';
+        if (this.colorScheme === 'dark') return 'Тема: Тёмная';
+        return 'Тема: Системная';
+    }
+
+    cycleColorScheme() {
+        const schemes = ['system', 'light', 'dark'];
+        const idx = schemes.indexOf(this.colorScheme);
+        this.colorScheme = schemes[(idx + 1) % schemes.length];
+    }
+
     inputBgColor(inp) {
-        if (inp === this.selectedList)
-            return 'white';
-        else
-            return 'yellow-1';
+        if (this.$q.dark.isActive) {
+            return inp === this.selectedList ? 'grey-9' : 'grey-10';
+        }
+        return inp === this.selectedList ? 'white' : 'yellow-1';
     }
 
     async updateListFromRoute(to) {
@@ -771,6 +802,20 @@ class Search {
     openReleasePage() {
         if (this.config.latestReleaseLink)
             window.open(this.config.latestReleaseLink, '_blank');
+    }
+
+    showAboutDialog() {
+        const cfg = this.config;
+        let info = `<div style="min-width: 220px">`;
+        info += `<b>${cfg.name}</b> v${cfg.webAppVersion}`;
+        if (cfg.latestVersion && cfg.version !== cfg.latestVersion) {
+            info += `<br><span style="color: var(--link-color)">Доступна новая версия v${cfg.latestVersion}</span>`;
+        }
+        if (cfg.latestReleaseLink) {
+            info += `<br><br><a href="${cfg.latestReleaseLink}" target="_blank" style="color: var(--link-color)">Открыть страницу релизов</a>`;
+        }
+        info += `</div>`;
+        this.$root.stdDialog.alert(info, 'О программе', {iconName: 'la la-info-circle', color: 'primary'});
     }
 
     makeProjectName() {
@@ -1018,18 +1063,12 @@ class Search {
         this.lastScrollTop = curScrollTop;
     }
 
-    async ignoreScroll(ms = 300) {
-        this.ignoreScrolling = true;
-        await utils.sleep(ms);
-        await this.$nextTick();
-        this.ignoreScrolling = false;
+    async ignoreScroll() {
+        // no longer needed: header is fixed, not sticky
     }
 
     scrollToTop() {
         this.$refs.scroller.scrollTop = 0;
-        this.lastScrollTop = 0;
-        this.$refs.toolPanel.style.top = '0px';
-        this.$refs.toolPanel.style.position = 'sticky';
     }
 
     updatePageCount() {
@@ -1277,7 +1316,16 @@ export default vueComponent(Search);
 }
 
 .tool-panel {
-    border-bottom: 1px solid #bbb;
+    background-color: var(--toolbar-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.toolbar-bg {
+    background-color: var(--toolbar-bg);
+}
+
+.toolbar-btn {
+    background-color: var(--toolbar-btn-bg) !important;
 }
 
 .header {
@@ -1285,7 +1333,7 @@ export default vueComponent(Search);
 }
 
 .clickable {
-    color: blue;
+    color: var(--link-color);
     cursor: pointer;
 }
 
@@ -1294,7 +1342,7 @@ export default vueComponent(Search);
 }
 
 .separator {
-    border-bottom: 2px solid #ddd;
+    border-bottom: 2px solid var(--separator-color);
     margin: 5px 0 5px 0;
 }
 </style>
